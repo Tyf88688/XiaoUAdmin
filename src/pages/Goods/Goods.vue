@@ -8,22 +8,46 @@
     <!--  -->
     <el-button type="primary" @click="goAdd">添加</el-button>
     <!--  -->
-    <el-table
-      :data="tableData"
-      style="width: 100%;margin-bottom: 20px;"
-      row-key="id"
-      border
-      default-expand-all
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-    >
-      <el-table-column prop="id" label="分类编号" width="180"></el-table-column>
-      <el-table-column prop="catename" label="商品分类名称"></el-table-column>
-      <!-- 要改 -->
-      <el-table-column label="图片" width="300">
-        <template slot-scope="scope">
-          <img :src="'http://localhost:3000' + scope.row.img" alt width="200" />
-        </template>
-      </el-table-column>
+       <!-- 表格数据 -->
+        <el-table :data="tableData"
+                  style="width: 100%;margin-bottom: 20px;"
+                  row-key="id"
+                  border
+                  default-expand-all
+                  :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+            <el-table-column prop="id"
+                             label="商品编号"
+                             width="180">
+            </el-table-column>
+            <el-table-column prop="goodsname"
+                             label="商品名称"
+                             width="180">
+            </el-table-column>
+            <el-table-column prop="price"
+                             label="商品价格">
+            </el-table-column>
+            <el-table-column prop="market_price"
+                             label="市场价格">
+            </el-table-column>
+
+            <el-table-column
+                             label="图片"
+                             width="300">
+                <template slot-scope="scope">
+                    <img :src="'http://localhost:3000' + scope.row.img" alt="">
+                </template>
+            </el-table-column>
+
+            <el-table-column label="是否新品">
+                <template slot-scope="scope">
+                    <el-tag>{{ scope.row.isnew | isNewHot}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="是否热卖">
+                <template slot-scope="scope">
+                    <el-tag>{{ scope.row.ishot | isNewHot}}</el-tag>
+                </template>
+            </el-table-column>
 
 
 
