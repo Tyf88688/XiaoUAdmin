@@ -7,7 +7,10 @@
           <Navbar />
       </el-aside>
       <el-container>
-        <el-header>Header</el-header>
+        <el-header>
+              <!-- 渲染当前登录的用户名 -->
+            {{ username }}
+        </el-header>
         <el-main>
              <router-view />
         </el-main>
@@ -23,7 +26,12 @@ export default {
   name: "App",
   components:{
     Navbar
-  }
+  },
+   computed: {
+        username() {
+            return this.$store.state.user.username
+        }
+    }
 };
 </script>
 
@@ -33,10 +41,11 @@ export default {
 *{margin: 0; padding: 0;}
 html,body,#app,.el-container{width: 100%; height: 100%;}
 .el-header{
-    background-color: #B3C0D1;
+    background-color: #b3c0d1;
     color: #333;
-    text-align: center;
+    text-align: right;
     line-height: 60px;
+    padding-right: 20px;
   }
   
   .el-aside {

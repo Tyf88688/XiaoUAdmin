@@ -49,68 +49,104 @@
                 </template>
             </el-table-column>
 
+            <el-table-column label="状态">
+                <template slot-scope="scope">
+                    <el-tag>{{ scope.row.status | statusFormat}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-button size="mini"
+                               @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-popconfirm title="你确定要删除吗"
+                                   @onConfirm="del(scope.row.id)">
+                        <el-button slot="reference"
+                                   size="mini"
+                                   type="danger">删除</el-button>
+                    </el-popconfirm>
 
-
-      
-      <el-table-column label="状态">
-        <template slot-scope="scope">
-          <el-tag>{{scope.row.status | statusFormat}}</el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-popconfirm title="你确定要删除吗" @onConfirm="del(scope.row.id)">
-            <el-button slot="reference" size="mini" type="danger">删除</el-button>
-          </el-popconfirm>
-        </template>
-      </el-table-column>
-    </el-table>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="total"
+            :page-size="2"
+            :current-page="current"
+            @current-change="currentChange">
+        </el-pagination>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      tableData: [],
-    };
-  },
-  mounted() {
-    this.getList();
-  },
-
-  methods: {
-    getList() {
-      this.$http.get("/catelist", { istree: true }).then((res) => {
-        this.tableData = res.data.list;
-      });
-    },
-    handleEdit(index, row) {
-    
-      this.$router.push("/category/edit?id=" + row.id);
-    },
-
-    goAdd() {
-      this.$router.push("/category/categoryadd");
-    },
-    del(i) {
-      // 调用删除的接口
-      this.$http.post("/catedelete", { id: i }).then((res) => {
-        if (res.data.code == 200) {
-          this.getList();
-          this.$message({
-            message: "删除成功",
-            type: "success",
-          });
+     filters: {
+        isNewHot(status) {
+            switch(status) {
+                case 1: 
+                    return "是";
+                    break;
+                case 2: 
+                    return "否";
+                    break;
+            }
         }
-      });
     },
-  },
+    data () {
+        return {
+            tableData: [],
+            total: 0,
+            current: 1,
+        }
+    },
+    mounted () {
+        this.getList()
+        this.$http.get("/goodscount").then(res => {
+            console.log(res)
+            this.total = res.data.list[0].total
+        })
+    },
+    methods: {
+        currentChange(page) {
+            
+            this.current = page;
+            this.getList()
+            console.log("我怎么这么帅")
+        },
+        getList () {
+            this.$http.get("/goodslist", { page: this.current, size: 2 }).then(res => {
+                console.log(res)
+                this.tableData = res.data.list
+            })
+        },
+        handleEdit (index, row) {
+            console.log(index, row);
+            this.$router.push("/goods/edit?id=" + row.id)
+        },
+        del (id) {
+            console.log("真的删除")
+            // 调用删除的接口
+            this.$http.post("/goodsdelete", { id }).then(res => {
+                console.log(res)
+                if (res.data.code == 200) {
+                    this.getList()
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                }
+            })
+        },
+        goAdd () {
+            this.$router.push("/goods/add")
+        }
+    }, 
 };
 </script>
 
 <style lang="stylus" scoped>
-    // img{width:100px;}
+   img {
+    width: 150px;
+}
 </style>

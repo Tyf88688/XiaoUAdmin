@@ -69,9 +69,9 @@ export default {
       this.buttonTitle = "修改";
       this.$http.get("/specsinfo", { id: this.id }).then((res) => {
         // console.log(res.data.list[0].attrs)
-        let { status } = res.data.list;
+        let { status } = res.data.list[0];
         this.ruleForm = {
-          ...res.data.list,
+          ...res.data.list[0],
           status: status == 1 ? true : false,
         };
         let arr = [];
